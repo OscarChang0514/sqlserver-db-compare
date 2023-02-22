@@ -78,10 +78,10 @@ const Home: React.FC<HomeProps> = () => {
               Obtain the definitions of SP, FN, VIEW, and TABLE of the database, and compare the differences
             </p>
           </Link>
-          <a
+          <Link
+            href="/compare-db-data"
             className={styles.card}
             rel="noopener noreferrer"
-            onClick={() => alert('comming soon')}
           >
             <h2 className={inter.className}>
               Compare Data <span>-&gt;</span>
@@ -89,7 +89,7 @@ const Home: React.FC<HomeProps> = () => {
             <p className={inter.className}>
               Obtain the specified Table data of the database and compare the data differences
             </p>
-          </a>
+          </Link>
         </div>
       </main>
     </Container>

@@ -1,8 +1,9 @@
 'use client';
+import { TableInfoCards } from '@/components/card/cards/TableInfoCards';
 import { ConnectionPoolCard } from '@/components/card/ConnectionPoolCard';
 import { CompareOptions } from '@/components/pages/compare-db/CompareOptions';
 import { DatabaseComparedTable } from '@/components/table/databaseComoparedTable/DatabaseComoparedTable';
-import { DatabaseDiffInfo, DatabaseObjInfo } from '@/model/db-info';
+import { DatabaseDiffInfo, DatabaseObjInfo, TableInfo } from '@/model/db-info';
 import { compareDbDiff } from '@/util/compare-db';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -10,15 +11,17 @@ import { Box, Container, Divider, Fab, Fade, Grid, Stack, Tooltip, Typography } 
 import Head from 'next/head';
 import { useRef, useState } from 'react';
 
-interface CompareDbSchemaPageProps {
+interface CompareDbDataPageProps {
 
 }
 
-const CompareDbSchemaPage: React.FC<CompareDbSchemaPageProps> = () => {
+const CompareDbDataPage: React.FC<CompareDbDataPageProps> = () => {
 
     const dbInfoRef = useRef<{ source?: DatabaseObjInfo[], target?: DatabaseObjInfo[] }>({});
 
     const optionsRef = useRef<{ [key: string]: boolean }>({ compareSpace: true });
+
+    const tableInfosRef = useRef<TableInfo[]>([]);
 
     const isComparingRef = useRef<boolean>(false);
 
@@ -26,9 +29,12 @@ const CompareDbSchemaPage: React.FC<CompareDbSchemaPageProps> = () => {
 
     const [showResult, setShowResult] = useState<boolean>(false);
 
+    const [tableInfoReadonly, setTableInfoReadonly] = useState<boolean>(false);
+
     const handleDbInfoCollected = (data: any, key: string) => {
         key === 'source' && (dbInfoRef.current.source = data.dbObj);
         key === 'target' && (dbInfoRef.current.target = data.dbObj);
+        setTableInfoReadonly(true);
     };
 
     const handleClear = async () => {
@@ -58,19 +64,31 @@ const CompareDbSchemaPage: React.FC<CompareDbSchemaPageProps> = () => {
         </Head>
         <Container maxWidth="lg">
             <Typography variant="h6" noWrap>
+                Tables
+            </Typography>
+            <Divider />
+            <Box sx={{ padding: '20px 0' }}>
+                <TableInfoCards
+                    readonly={tableInfoReadonly}
+                    onTableInfosChange={data => tableInfosRef.current = data}
+                />
+            </Box>
+            <Typography variant="h6" noWrap>
                 Conntion pools
             </Typography>
             <Divider />
             <Grid container spacing={2} sx={{ padding: '20px 0' }} columns={{ xs: 6, sm: 12, md: 12 }} >
                 <Grid item xs={6}>
-                    <ConnectionPoolCard
+                    <ConnectionPoolCard dataComporeMode
+                        tableInfosRef={tableInfosRef}
                         title={'Source DB'}
                         label={'source'}
                         onDbInfoCollected={data => handleDbInfoCollected(data, 'source')}
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <ConnectionPoolCard
+                    <ConnectionPoolCard dataComporeMode
+                        tableInfosRef={tableInfosRef}
                         title={'Target DB'}
                         label={'target'}
                         onDbInfoCollected={data => handleDbInfoCollected(data, 'target')}
@@ -102,7 +120,7 @@ const CompareDbSchemaPage: React.FC<CompareDbSchemaPageProps> = () => {
                     </Typography>
                     <Divider />
                     <Box sx={{ padding: '20px 0' }}>
-                        <DatabaseComparedTable rows={compareRes} options={{ context: 5 }} />
+                        <DatabaseComparedTable rows={compareRes} options={{ context: 0, matching: 'lines' }} />
                     </Box>
                 </Box>
             </Fade>
@@ -110,4 +128,4 @@ const CompareDbSchemaPage: React.FC<CompareDbSchemaPageProps> = () => {
     </>)
 }
 
-export default CompareDbSchemaPage;
+export default CompareDbDataPage;

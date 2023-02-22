@@ -1,17 +1,7 @@
 export interface DatabaseObjInfo {
     objName: string;
     definition: string;
-}
-
-export interface DatabaseSchemaInfo {
-    tableName: string;
-    columnName: string;
-    columnInfo: string;
-}
-
-export interface DatabaseInfo {
-    dbObj: DatabaseObjInfo[];
-    dbSchema: DatabaseSchemaInfo[];
+    type: string;
 }
 
 export interface DatabaseDiffInfo {
@@ -19,4 +9,10 @@ export interface DatabaseDiffInfo {
     type: string;
     message: string;
     definition?: { source: string, target: string };
+}
+
+export interface TableInfo {
+    tableName: string;
+    columns: string;
+    whereSql?: string;
 }

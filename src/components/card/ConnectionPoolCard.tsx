@@ -1,7 +1,8 @@
 'use client';
+import { TableInfo } from '@/model/db-info';
 import CheckIcon from '@mui/icons-material/Check';
 import { Box, Button, Card, CardContent, Collapse, Divider, styled, TextField, Typography } from "@mui/material";
-import { useRef, useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 
 const StatusButton = styled(Button)({
     transitionDuration: '0.8s',
@@ -13,6 +14,8 @@ interface ConnectionPoolCardProps {
     title?: string;
     label?: string;
     onDbInfoCollected?: (data: any) => void;
+    dataComporeMode?: boolean;
+    tableInfosRef?: MutableRefObject<TableInfo[]>;
 }
 
 export const ConnectionPoolCard: React.FC<ConnectionPoolCardProps> = (props) => {
@@ -45,7 +48,9 @@ export const ConnectionPoolCard: React.FC<ConnectionPoolCardProps> = (props) => 
 
     const getDbInfo = async (data: any) => {
         try {
-            let response = await fetch("/api/get-db-info", { method: "POST", body: JSON.stringify(data) });
+            let myData = { ...data, tableInfos: props.tableInfosRef?.current ?? [] }
+            let requestUrl = props.dataComporeMode ? "/api/get-db-data-info" : "/api/get-db-schema-info";
+            let response = await fetch(requestUrl, { method: "POST", body: JSON.stringify(myData) });
             let res = await response.json();
             if (response.ok) {
                 setTopTitle(data.host + ' - ' + data.databaseName)

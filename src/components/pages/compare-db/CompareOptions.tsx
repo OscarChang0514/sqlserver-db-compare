@@ -24,12 +24,12 @@ export const CompareOptions: React.FC<CompareOptionsProps> = (props) => {
 
     return (<>
         <Tooltip title="Compare Space">
-            <Fab size="medium" color="primary" aria-label="add" onClick={() => handleOptionsChange('compareSpace')}>
+            <Fab size="medium" color="primary" aria-label="compare-space" onClick={() => handleOptionsChange('compareSpace')}>
                 <SpaceBarIcon sx={{ opacity: !compareSpace && '0.2' }} />
             </Fab>
         </Tooltip>
         <Tooltip title="Case Sensitive">
-            <Fab size="medium" color="primary" aria-label="add" onClick={() => handleOptionsChange('caseSensitive')}>
+            <Fab size="medium" color="primary" aria-label="case-sensitive" onClick={() => handleOptionsChange('caseSensitive')}>
                 <AbcIcon fontSize="large" sx={{ opacity: !caseSensitive && '0.2' }} />
             </Fab>
         </Tooltip>

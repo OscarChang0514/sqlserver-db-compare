@@ -2,6 +2,7 @@ import { DatabaseDiffInfo } from "@/model/db-info";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
+import { ICodeDiffProps } from "react-code-diff-lite";
 import { CollapseComparedTableRow } from "./CollapseComparedTableRow";
 
 const HeaderRow = styled(TableRow)({
@@ -10,6 +11,7 @@ const HeaderRow = styled(TableRow)({
 
 interface DatabaseComparedTableProps {
     rows?: DatabaseDiffInfo[];
+    options?: ICodeDiffProps;
 }
 
 export const DatabaseComparedTable: React.FC<DatabaseComparedTableProps> = (props) => {
@@ -46,7 +48,11 @@ export const DatabaseComparedTable: React.FC<DatabaseComparedTableProps> = (prop
                 </TableHead>
                 <TableBody>
                     {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                        <CollapseComparedTableRow key={row.objName} row={row} />
+                        <CollapseComparedTableRow
+                            key={row.objName}
+                            row={row}
+                            options={props.options}
+                        />
                     ))}
                 </TableBody>
             </Table>
@@ -64,5 +70,6 @@ export const DatabaseComparedTable: React.FC<DatabaseComparedTableProps> = (prop
 }
 
 DatabaseComparedTable.defaultProps = {
-    rows: []
+    rows: [],
+    options: {}
 }
