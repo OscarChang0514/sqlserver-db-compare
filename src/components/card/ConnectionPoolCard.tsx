@@ -36,21 +36,25 @@ export const ConnectionPoolCard: React.FC<ConnectionPoolCardProps> = (props) => 
     const handleSubmit = (e: any) => {
         e.preventDefault();
         if ([0, 3].includes(status)) {
-            setStatus(1);
-            getDbInfo({
-                host: e.target[1].value,
-                databaseName: e.target[2].value,
-                userName: e.target[3].value,
-                pwd: e.target[4].value,
-            })
+            if (props.dataComporeMode && (props.tableInfosRef?.current.length ?? 0) === 0) {
+                alert('Compare at least one table');
+            } else {
+                setStatus(1);
+                getDbInfo({
+                    host: e.target[1].value,
+                    databaseName: e.target[2].value,
+                    userName: e.target[3].value,
+                    pwd: e.target[4].value,
+                    tableInfos: props.tableInfosRef?.current ?? []
+                })
+            }
         }
     }
 
     const getDbInfo = async (data: any) => {
         try {
-            let myData = { ...data, tableInfos: props.tableInfosRef?.current ?? [] }
             let requestUrl = props.dataComporeMode ? "/api/get-db-data-info" : "/api/get-db-schema-info";
-            let response = await fetch(requestUrl, { method: "POST", body: JSON.stringify(myData) });
+            let response = await fetch(requestUrl, { method: "POST", body: JSON.stringify(data) });
             let res = await response.json();
             if (response.ok) {
                 setTopTitle(data.host + ' - ' + data.databaseName)
