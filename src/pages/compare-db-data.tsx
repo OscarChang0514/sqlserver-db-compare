@@ -1,8 +1,8 @@
-'use client';
 import { TableInfoCards } from '@/components/card/cards/TableInfoCards';
 import { ConnectionPoolCard } from '@/components/card/ConnectionPoolCard';
 import { CompareOptions } from '@/components/pages/compare-db/CompareOptions';
 import { DatabaseComparedTable } from '@/components/table/databaseComoparedTable/DatabaseComoparedTable';
+import { useGlobalContext } from '@/hook/useGlobalContext';
 import { DatabaseDiffInfo, DatabaseObjInfo, TableInfo } from '@/model/db-info';
 import { compareDbDiff } from '@/util/compare-db';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
@@ -25,6 +25,8 @@ const CompareDbDataPage: React.FC<CompareDbDataPageProps> = () => {
 
     const isComparingRef = useRef<boolean>(false);
 
+    const { sendAlert } = useGlobalContext();
+
     const [compareRes, setCompareRes] = useState<DatabaseDiffInfo[]>([]);
 
     const [showResult, setShowResult] = useState<boolean>(false);
@@ -44,7 +46,7 @@ const CompareDbDataPage: React.FC<CompareDbDataPageProps> = () => {
 
     const startCompare = async () => {
         if (!(dbInfoRef.current.source && dbInfoRef.current.target)) {
-            alert('Please confirm that the data collection is complete');
+            sendAlert('Please confirm that the data collection is complete', 'warning');
         } else {
             isComparingRef.current = true;
             let { source, target } = dbInfoRef.current;

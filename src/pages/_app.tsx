@@ -1,3 +1,5 @@
+import { ContextComponents } from '@/components/layout/context/ContextComponents';
+import { GlobalContextProvider } from '@/context/GlobalContext';
 import '@/styles/globals.css';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { AppBar, Box, createTheme, styled, ThemeProvider, Typography } from '@mui/material';
@@ -44,18 +46,21 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return <div style={{ maxHeight: '100vh' }}>
     <ThemeProvider theme={darkTheme}>
-      <NavBar position="sticky">
-        <NavTitle variant="h5" noWrap
-          sx={{ mr: 2, display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'left' } }}
-        >
-          <WebLink onClick={() => router.push('/')}>
-            <DashboardIcon />&nbsp;DB COMPARE
-          </WebLink>
-        </NavTitle>
-      </NavBar>
-      <PageContainer>
-        <Component {...pageProps} />
-      </PageContainer>
+      <GlobalContextProvider>
+        <ContextComponents />
+        <NavBar position="sticky">
+          <NavTitle variant="h5" noWrap
+            sx={{ mr: 2, display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'left' } }}
+          >
+            <WebLink onClick={() => router.push('/')}>
+              <DashboardIcon />&nbsp;DB COMPARE
+            </WebLink>
+          </NavTitle>
+        </NavBar>
+        <PageContainer>
+          <Component {...pageProps} />
+        </PageContainer>
+      </GlobalContextProvider>
     </ThemeProvider>
   </div>
 }

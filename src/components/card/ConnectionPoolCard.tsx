@@ -1,4 +1,4 @@
-'use client';
+import { useGlobalContext } from '@/hook/useGlobalContext';
 import { TableInfo } from '@/model/db-info';
 import CheckIcon from '@mui/icons-material/Check';
 import { Box, Button, Card, CardContent, Collapse, Divider, styled, TextField, Typography } from "@mui/material";
@@ -20,11 +20,13 @@ interface ConnectionPoolCardProps {
 
 export const ConnectionPoolCard: React.FC<ConnectionPoolCardProps> = (props) => {
 
+    const formRef = useRef<HTMLFormElement>(null);
+
     const [status, setStatus] = useState<number>(0);
 
     const [topTitle, setTopTitle] = useState<string>('-')
 
-    const ref = useRef<HTMLFormElement>(null)
+    const { sendAlert } = useGlobalContext();
 
     const collectionStatus: any = [
         { variant: 'outlined', color: 'info', text: 'Collect Schema' },
@@ -63,17 +65,19 @@ export const ConnectionPoolCard: React.FC<ConnectionPoolCardProps> = (props) => 
             } else {
                 setStatus(3);
                 console.error(res);
+                sendAlert(res.message, 'error');
             }
         } catch (err) {
             setStatus(3);
             console.error(err);
+            sendAlert('some bad things happened, check console to see detail', 'error');
         }
     };
 
     return (
         <Card>
             <CardContent>
-                <form ref={ref} onSubmit={handleSubmit}>
+                <form ref={formRef} onSubmit={handleSubmit}>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         {topTitle}
                     </Typography>
